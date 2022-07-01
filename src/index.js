@@ -12,7 +12,11 @@ app.post("/", async (req, res) => {
   const { v_height, v_width, height, width, deviceScaleFactor, x, y, url } =
     req.body;
 
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    headless: true,
+    executablePath: "/usr/bin/chromium-browser",
+    args: ["--no-sandbox", "--disable-gpu"],
+  });
   const page = await browser.newPage();
   await page.goto(url, {
     waitUntil: "networkidle2",
@@ -47,7 +51,7 @@ app.post("/", async (req, res) => {
 
   try {
     const response = await axios(config);
-    res.send(response.data.data.url);
+    res.send(response.data);
   } catch (error) {
     res.send("Something went wrong");
   }
