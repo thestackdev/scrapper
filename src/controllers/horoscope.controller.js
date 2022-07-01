@@ -1,4 +1,5 @@
 import puppeteer from "puppeteer";
+import axios from "axios";
 
 const ZODIAC_SIGNS = {
   Aries: 1,
@@ -25,9 +26,9 @@ export const scrapeHoroscope = async (req, res) => {
 
   try {
     const browser = await puppeteer.launch({
-      headless: true,
-      executablePath: "/usr/bin/chromium-browser",
-      args: ["--no-sandbox", "--disable-gpu"],
+      // headless: true,
+      // executablePath: "/usr/bin/chromium-browser",
+      // args: ["--no-sandbox", "--disable-gpu"],
     });
     const page = await browser.newPage();
 
@@ -37,16 +38,24 @@ export const scrapeHoroscope = async (req, res) => {
     );
 
     const response = await page.evaluate(() => {
-      return document.querySelector(
+      const description = document.querySelector(
         "body > div.grid.grid-right-sidebar.primis-rr > main > div.main-horoscope > p:nth-child(2)"
       ).innerHTML;
+      return description.substring(
+        description.indexOf("-") + 2,
+        description.length
+      );
     });
 
+    const extrakeys = await axios.post(
+      `https://aztro.sameerkumar.website/?sign=${sign.toLowerCase()}&day=today`
+    );
+
     await browser.close();
-    res.send(`
-      <h3>Your daily horoscope ${sign}</h3>
-      <span>${response}</span>
-    `);
+    res.send({
+      ...extrakeys.data,
+      description: `${response}`,
+    });
   } catch (error) {
     res.send(`Error ${error}`);
   }
