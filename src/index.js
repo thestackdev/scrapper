@@ -12,5 +12,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/screenshot", screenshotRouter);
 app.use("/horoscope", horoscopeRouter);
+app.use("/test", (req, res) => {
+  res.send("Hello World");
+});
 
 app.listen(8000);
