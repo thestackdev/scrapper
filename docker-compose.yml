@@ -1,0 +1,11 @@
+services:
+  scrapper:
+    image: scrapper
+    container_name: scrapper
+    restart: unless-stopped
+    network_mode: bridge
+    build: .
+    expose:
+      - 8000
+    ports:
+      - 8000:8000
