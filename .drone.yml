@@ -12,7 +12,7 @@ steps:
       password:
         from_secret: PASSWORD
       port: 22
-      target: /home/ci/scraper/
+      target: /home/ci/scrapper/
       source: .
 
   - name: Deploy
