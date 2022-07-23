@@ -1,0 +1,32 @@
+kind: pipeline
+name: default
+
+steps:
+  - name: Checkout
+    image: appleboy/drone-scp
+    settings:
+      host:
+        from_secret: HOST
+      username:
+        from_secret: USERNAME
+      password:
+        from_secret: PASSWORD
+      port: 22
+      target: /home/ci/scraper/
+      source: .
+
+  - name: Deploy
+    image: appleboy/drone-ssh
+    depends_on:
+      - Checkout
+    settings:
+      host:
+        from_secret: HOST
+      username:
+        from_secret: USERNAME
+      password:
+        from_secret: PASSWORD
+      port: 22
+      script:
+        - cd /home/ci/scrapper/
+        - docker compose up -d --force-recreate
