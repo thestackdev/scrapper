@@ -30,3 +30,7 @@ steps:
       script:
         - cd /home/ci/scrapper/
         - docker compose up -d --force-recreate
+
+trigger:
+  branch:
+    - main
