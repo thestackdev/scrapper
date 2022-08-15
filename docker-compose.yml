@@ -3,9 +3,14 @@ services:
     image: scrapper
     container_name: scrapper
     restart: unless-stopped
-    network_mode: bridge
     build: .
-    expose:
-      - 8000
-    ports:
-      - 8000:8000
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.joplin.rule=Host(`scrapper.apis.fullstacklab.org`)
+      - traefik.http.routers.joplin.tls.certresolver=letsencrypt
+      - traefik.http.routers.joplin.entrypoints=https
+
+networks:
+  default:
+    name: traefik
+    external: true
